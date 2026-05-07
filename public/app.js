@@ -5,6 +5,8 @@ const form = $('#auditForm');
 const runButton = $('#runButton');
 const statusPanel = $('#statusPanel');
 const dashboard = $('#dashboard');
+const pasteField = $('.paste-field');
+const articleContent = $('#articleContent');
 const themeToggle = $('#themeToggle');
 const exportButton = $('#exportButton');
 const shareButton = $('#shareButton');
@@ -18,20 +20,31 @@ const fields = {
   competitors: $('#competitors'), distribution: $('#distributionPanel'), risk: $('#publishing-risk'), diagnostics: $('#readability'), evidence: $('#sources'), auditRuntime: $('#auditRuntime')
 };
 
-const modeLabels = {
+const labels = {
   url: ['Published article URL', 'https://example.com/article'],
   docs: ['Public Google Docs link', 'https://docs.google.com/document/d/...'],
   notion: ['Public Notion link', 'https://notion.site/...'],
   paste: ['Optional source URL', 'https://example.com/original-source']
 };
 
-$$('.mode-tab').forEach((tab) => tab.addEventListener('click', () => activateMode(tab.dataset.mode)));
+$$('.mode-tab').forEach((tab) => tab.addEventListener('click', () => setMode(tab.dataset.mode)));
 
-function activateMode(mode) {
+function setMode(mode) {
   $$('.mode-tab').forEach((tab) => tab.classList.toggle('active', tab.dataset.mode === mode));
-  $('.paste-field').classList.toggle('hidden', mode !== 'paste');
-  $('#urlLabel').textContent = modeLabels[mode][0];
-  $('#articleUrl').placeholder = modeLabels[mode][1];
+  pasteField.classList.toggle('hidden', mode !== 'paste');
+  $('#urlLabel').textContent = labels[mode][0];
+  $('#articleUrl').placeholder = labels[mode][1];
+}
+
+function forcePasteMode() {
+  setMode('paste');
+  pasteField.classList.remove('hidden');
+  $$('.mode-tab').forEach((tab) => tab.classList.toggle('active', tab.dataset.mode === 'paste'));
+  articleContent.placeholder = 'Paste the full article text here, then click Run Audit again.';
+  setTimeout(() => {
+    articleContent.focus();
+    articleContent.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 0);
 }
 
 themeToggle.addEventListener('click', () => {
@@ -49,7 +62,7 @@ if (localStorage.getItem('audit-theme') === 'light') {
 form.addEventListener('submit', async (event) => {
   event.preventDefault();
   const url = $('#articleUrl').value.trim();
-  const content = $('#articleContent').value.trim();
+  const content = articleContent.value.trim();
   if (!url && !content) return showStatus('Enter a URL, a public Docs/Notion link, or paste article content.', true);
 
   setLoading(true);
@@ -85,8 +98,7 @@ form.addEventListener('submit', async (event) => {
     dashboard.classList.add('hidden');
     const message = error.message || 'The audit could not be completed.';
     if (isBlockedFetchError(message) && !content) {
-      activateMode('paste');
-      $('#articleContent').focus();
+      forcePasteMode();
       showStatus(blockedUrlMessage(url, message), true, true);
     } else {
       showStatus(esc(message), true, true);
@@ -121,7 +133,7 @@ document.addEventListener('click', (event) => {
   const button = event.target.closest('[data-jump-target]');
   if (!button) return;
   const target = $(button.getAttribute('data-jump-target'));
-  if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
 });
 
 function renderDashboard(data) {
@@ -259,7 +271,7 @@ function isBlockedFetchError(message) {
 }
 
 function blockedUrlMessage(url, message) {
-  return `<strong>This site blocked the audit request.</strong><p>${esc(message)}</p><p>I opened Paste Text mode. Copy the article text from your browser, paste it in the Draft content box, keep the original URL above, then click Run Audit again.</p>${url ? `<p class="muted">Blocked URL: ${esc(url)}</p>` : ''}`;
+  return `<strong>This site blocked the audit request.</strong><p>${esc(message)}</p><p>The article opens for you in your browser, but it blocks the Render server that runs this audit. I opened the Draft content box above. Copy the article body from your browser, paste it there, then click Run Audit again.</p><button class="text-button" type="button" data-jump-target="#articleContent">Go to Draft content</button>${url ? `<p class="muted">Blocked URL: ${esc(url)}</p>` : ''}`;
 }
 
 function confidenceState(data) {

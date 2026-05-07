@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: content-audit-tool
+    env: node
+    plan: free
+    buildCommand: npm ci --omit=dev
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production

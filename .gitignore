@@ -1,0 +1,6 @@
+node_modules/
+.env
+.DS_Store
+npm-debug.log*
+content-audit-tool-hostinger.zip
+content-audit-tool-node-deploy.zip

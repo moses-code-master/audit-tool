@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Content Audit Tool</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="shell">
+      <section class="masthead">
+        <div>
+          <p class="eyebrow">Newsroom audit panel</p>
+          <h1>Content Audit Tool</h1>
+        </div>
+        <form id="auditForm" class="audit-form">
+          <label class="field">
+            <span>Published article URL</span>
+            <input id="articleUrl" type="url" placeholder="https://example.com/article" required>
+          </label>
+          <label class="field">
+            <span>Focus keyword</span>
+            <input id="focusKeyword" type="text" placeholder="Optional">
+          </label>
+          <button type="submit" id="runButton">Run Audit</button>
+        </form>
+      </section>
+
+      <section id="statusPanel" class="status-panel hidden" aria-live="polite"></section>
+
+      <section id="dashboard" class="dashboard hidden">
+        <div class="score-hero">
+          <div class="score-ring"><span id="compositeScore">0</span><small>/100</small></div>
+          <div class="article-summary">
+            <p class="eyebrow">Composite score</p>
+            <h2 id="articleTitle"></h2>
+            <a id="articleLink" href="#" target="_blank" rel="noreferrer"></a>
+          </div>
+        </div>
+
+        <div class="metrics-grid">
+          <article class="metric"><span>Author</span><strong id="author"></strong></article>
+          <article class="metric"><span>Date</span><strong id="date"></strong></article>
+          <article class="metric"><span>Word count</span><strong id="wordCount"></strong></article>
+          <article class="metric"><span>Keyword density</span><strong id="keywordDensity"></strong></article>
+          <article class="metric"><span>H2 count</span><strong id="h2Count"></strong></article>
+          <article class="metric"><span>Focus keyword</span><strong id="keyword"></strong></article>
+          <article class="metric"><span>Avg sentence</span><strong id="avgSentence"></strong></article>
+          <article class="metric"><span>Flesch score</span><strong id="fleschScore"></strong></article>
+          <article class="metric"><span>Grade level</span><strong id="gradeLevel"></strong></article>
+          <article class="metric"><span>Claim support</span><strong id="claimSupport"></strong></article>
+          <article class="metric"><span>Evidence sources</span><strong id="evidenceSources"></strong></article>
+          <article class="metric"><span>Confidence</span><strong id="accuracyConfidence"></strong></article>
+        </div>
+
+        <section class="panel">
+          <div class="panel-heading"><div><p class="eyebrow">Formula-based checks</p><h3>Readability and credibility diagnostics</h3></div></div>
+          <div id="diagnosticsGrid" class="diagnostics-grid"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-heading"><div><p class="eyebrow">Scraped fields</p><h3>Extracted article data</h3></div></div>
+          <div class="extracted-grid">
+            <article class="extract-block"><span>Category</span><strong id="category"></strong></article>
+            <article class="extract-block"><span>Links</span><strong id="linksCount"></strong></article>
+            <article class="extract-block"><span>Images</span><strong id="imagesCount"></strong></article>
+            <article class="extract-block"><span>Meta description</span><p id="metaDescription"></p></article>
+            <article class="extract-block"><span>H2 headings</span><ul id="h2Headings" class="compact-list"></ul></article>
+            <article class="extract-block"><span>Linked sources</span><ul id="linksList" class="compact-list"></ul></article>
+            <article class="extract-block"><span>Image inventory</span><ul id="imagesList" class="compact-list"></ul></article>
+            <article class="extract-block full"><span>Body text preview</span><p id="bodyPreview"></p></article>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-heading"><div><p class="eyebrow">Editorial scoring</p><h3>Score breakdown</h3></div></div>
+          <div id="scoreBreakdown" class="score-breakdown"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-heading">
+            <div><p class="eyebrow">Pass, warning, fail</p><h3>Quality gates</h3></div>
+            <div id="gateTotals" class="gate-totals"></div>
+          </div>
+          <div id="qualityGates" class="gates-grid"></div>
+        </section>
+
+        <section class="notes-grid">
+          <article class="panel"><div class="panel-heading"><div><p class="eyebrow">Editor review</p><h3>Final editor notes</h3></div></div><ul id="editorNotes" class="notes-list"></ul></article>
+          <article class="panel"><div class="panel-heading"><div><p class="eyebrow">Action list</p><h3>Suggested fixes</h3></div></div><ul id="suggestedFixes" class="notes-list"></ul></article>
+        </section>
+      </section>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>

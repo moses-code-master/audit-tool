@@ -1,0 +1,16 @@
+{
+  "name": "content-audit-tool",
+  "version": "1.0.0",
+  "description": "A newsroom-style web app for auditing article quality, readability, SEO, credibility, and editorial depth.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0",
+    "express": "^4.19.2"
+  }
+}

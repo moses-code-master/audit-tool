@@ -6,91 +6,173 @@
     <title>Content Audit Tool</title>
     <link rel="stylesheet" href="styles.css">
   </head>
-  <body>
-    <main class="shell">
-      <section class="masthead">
-        <div>
-          <p class="eyebrow">Newsroom audit panel</p>
-          <h1>Content Audit Tool</h1>
-        </div>
-        <form id="auditForm" class="audit-form">
-          <label class="field">
-            <span>Published article URL</span>
-            <input id="articleUrl" type="url" placeholder="https://example.com/article" required>
-          </label>
-          <label class="field">
-            <span>Focus keyword</span>
-            <input id="focusKeyword" type="text" placeholder="Optional">
-          </label>
-          <button type="submit" id="runButton">Run Audit</button>
-        </form>
-      </section>
-
-      <section id="statusPanel" class="status-panel hidden" aria-live="polite"></section>
-
-      <section id="dashboard" class="dashboard hidden">
-        <div class="score-hero">
-          <div class="score-ring"><span id="compositeScore">0</span><small>/100</small></div>
-          <div class="article-summary">
-            <p class="eyebrow">Composite score</p>
-            <h2 id="articleTitle"></h2>
-            <a id="articleLink" href="#" target="_blank" rel="noreferrer"></a>
+  <body class="theme-dark">
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand-lockup">
+          <div class="brand-mark">CA</div>
+          <div>
+            <strong>Newsroom</strong>
+            <span>Audit Suite</span>
           </div>
         </div>
-
-        <div class="metrics-grid">
-          <article class="metric"><span>Author</span><strong id="author"></strong></article>
-          <article class="metric"><span>Date</span><strong id="date"></strong></article>
-          <article class="metric"><span>Word count</span><strong id="wordCount"></strong></article>
-          <article class="metric"><span>Keyword density</span><strong id="keywordDensity"></strong></article>
-          <article class="metric"><span>H2 count</span><strong id="h2Count"></strong></article>
-          <article class="metric"><span>Focus keyword</span><strong id="keyword"></strong></article>
-          <article class="metric"><span>Avg sentence</span><strong id="avgSentence"></strong></article>
-          <article class="metric"><span>Flesch score</span><strong id="fleschScore"></strong></article>
-          <article class="metric"><span>Grade level</span><strong id="gradeLevel"></strong></article>
-          <article class="metric"><span>Claim support</span><strong id="claimSupport"></strong></article>
-          <article class="metric"><span>Evidence sources</span><strong id="evidenceSources"></strong></article>
-          <article class="metric"><span>Confidence</span><strong id="accuracyConfidence"></strong></article>
+        <nav class="side-nav" aria-label="Workspace navigation">
+          <a class="active" href="#overview"><span>AO</span>Audit Overview</a>
+          <a href="#preview"><span>ED</span>Content Editor</a>
+          <a href="#competitors"><span>CP</span>Competitor Compare</a>
+          <a href="#sources"><span>FS</span>Facts & Sources</a>
+          <a href="#ai-analysis"><span>EI</span>Editorial Intel</a>
+          <a href="#publishing-risk"><span>RK</span>Publishing Risk</a>
+        </nav>
+        <div class="sidebar-footer">
+          <div class="avatar">ED</div>
+          <div>
+            <strong>Editor Desk</strong>
+            <span>Crypto newsroom</span>
+          </div>
         </div>
+      </aside>
 
-        <section class="panel">
-          <div class="panel-heading"><div><p class="eyebrow">Formula-based checks</p><h3>Readability and credibility diagnostics</h3></div></div>
-          <div id="diagnosticsGrid" class="diagnostics-grid"></div>
-        </section>
-
-        <section class="panel">
-          <div class="panel-heading"><div><p class="eyebrow">Scraped fields</p><h3>Extracted article data</h3></div></div>
-          <div class="extracted-grid">
-            <article class="extract-block"><span>Category</span><strong id="category"></strong></article>
-            <article class="extract-block"><span>Links</span><strong id="linksCount"></strong></article>
-            <article class="extract-block"><span>Images</span><strong id="imagesCount"></strong></article>
-            <article class="extract-block"><span>Meta description</span><p id="metaDescription"></p></article>
-            <article class="extract-block"><span>H2 headings</span><ul id="h2Headings" class="compact-list"></ul></article>
-            <article class="extract-block"><span>Linked sources</span><ul id="linksList" class="compact-list"></ul></article>
-            <article class="extract-block"><span>Image inventory</span><ul id="imagesList" class="compact-list"></ul></article>
-            <article class="extract-block full"><span>Body text preview</span><p id="bodyPreview"></p></article>
+      <main class="main-shell">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Newsroom verification system</p>
+            <h1>Content Audit Tool</h1>
+            <p class="subtitle">Credibility, risk, and editorial standards analysis</p>
           </div>
-        </section>
-
-        <section class="panel">
-          <div class="panel-heading"><div><p class="eyebrow">Editorial scoring</p><h3>Score breakdown</h3></div></div>
-          <div id="scoreBreakdown" class="score-breakdown"></div>
-        </section>
-
-        <section class="panel">
-          <div class="panel-heading">
-            <div><p class="eyebrow">Pass, warning, fail</p><h3>Quality gates</h3></div>
-            <div id="gateTotals" class="gate-totals"></div>
+          <div class="topbar-actions">
+            <button id="exportButton" class="ghost-button" type="button">Export Report</button>
+            <button id="shareButton" class="ghost-button" type="button">Share</button>
+            <div class="theme-switch" aria-label="Theme toggle">
+              <span>Light</span>
+              <button id="themeToggle" type="button">Dark</button>
+            </div>
           </div>
-          <div id="qualityGates" class="gates-grid"></div>
+        </header>
+
+        <section class="intake-card">
+          <form id="auditForm" class="audit-form">
+            <div class="input-tabs" aria-label="Audit input type">
+              <button class="mode-tab active" type="button" data-mode="url">URL</button>
+              <button class="mode-tab" type="button" data-mode="docs">Google Docs</button>
+              <button class="mode-tab" type="button" data-mode="notion">Notion</button>
+              <button class="mode-tab" type="button" data-mode="paste">Paste Text</button>
+            </div>
+
+            <label class="ai-toggle">
+              <input id="enableAi" type="checkbox">
+              <span>Editorial intelligence review</span>
+            </label>
+
+            <label class="field url-field">
+              <span id="urlLabel">Published article URL</span>
+              <input id="articleUrl" type="url" placeholder="https://example.com/article">
+            </label>
+            <label class="field keyword-field">
+              <span>Focus keyword</span>
+              <input id="focusKeyword" type="text" placeholder="bitcoin price">
+            </label>
+            <button type="submit" id="runButton" class="run-button">Run Audit</button>
+
+            <label class="field paste-field hidden">
+              <span>Draft content</span>
+              <textarea id="articleContent" rows="9" placeholder="Paste article text, Markdown, or copied HTML here. Use ## for H2 headings when pasting plain text."></textarea>
+            </label>
+
+            <details class="advanced-fields">
+              <summary>Metadata and evidence options</summary>
+              <div class="metadata-grid">
+                <label class="field"><span>Title override</span><input id="manualTitle" type="text" placeholder="Optional"></label>
+                <label class="field"><span>Author</span><input id="manualAuthor" type="text" placeholder="Optional"></label>
+                <label class="field"><span>Date</span><input id="manualDate" type="text" placeholder="Optional"></label>
+                <label class="field"><span>Category</span><input id="manualCategory" type="text" placeholder="Optional"></label>
+                <label class="field meta-field"><span>Meta description</span><input id="manualMeta" type="text" placeholder="Optional"></label>
+                <label class="field evidence-field"><span>Evidence URLs</span><textarea id="evidenceUrls" rows="3" placeholder="Optional source URLs, one per line. Useful for pasted drafts."></textarea></label>
+              </div>
+            </details>
+          </form>
         </section>
 
-        <section class="notes-grid">
-          <article class="panel"><div class="panel-heading"><div><p class="eyebrow">Editor review</p><h3>Final editor notes</h3></div></div><ul id="editorNotes" class="notes-list"></ul></article>
-          <article class="panel"><div class="panel-heading"><div><p class="eyebrow">Action list</p><h3>Suggested fixes</h3></div></div><ul id="suggestedFixes" class="notes-list"></ul></article>
+        <section id="statusPanel" class="status-panel hidden" aria-live="polite"></section>
+
+        <section id="dashboard" class="dashboard hidden">
+          <section id="overview" class="score-hero">
+            <div class="score-dial">
+              <svg viewBox="0 0 120 120" aria-hidden="true">
+                <circle class="dial-track" cx="60" cy="60" r="50"></circle>
+                <circle id="scoreArc" class="dial-arc" cx="60" cy="60" r="50"></circle>
+              </svg>
+              <div>
+                <strong id="compositeScore">0</strong>
+                <span>/100</span>
+              </div>
+            </div>
+            <div class="hero-copy">
+              <div class="hero-tags">
+                <span id="categoryTag">News article</span>
+                <span id="auditTimestamp">Not audited</span>
+              </div>
+              <h2 id="articleTitle"></h2>
+              <a id="articleLink" href="#" target="_blank" rel="noreferrer"></a>
+              <p id="heroSummary"></p>
+              <div class="hero-meta">
+                <span><b>Author</b><strong id="author"></strong></span>
+                <span><b>Published</b><strong id="date"></strong></span>
+                <span><b>Word Count</b><strong id="wordCount"></strong></span>
+                <span><b>Read Time</b><strong id="readTime"></strong></span>
+                <span><b>Confidence</b><strong id="heroConfidence"></strong></span>
+                <span><b>AI-Style Risk</b><strong id="heroAiRisk"></strong></span>
+              </div>
+            </div>
+          </section>
+
+          <section id="kpiGrid" class="kpi-grid"></section>
+
+          <nav class="section-tabs" aria-label="Audit sections">
+            <a class="active" href="#overview">Overview</a>
+            <a href="#readability">Readability</a>
+            <a href="#seo">SEO</a>
+            <a href="#eeat">E-E-A-T</a>
+            <a href="#sources">Sources</a>
+            <a href="#ai-analysis">Editorial Intel</a>
+            <a href="#competitors">Competitors</a>
+          </nav>
+
+          <section class="dashboard-grid primary-grid">
+            <article id="scoreAnalytics" class="panel analytics-panel"></article>
+            <article id="qualityPanel" class="panel quality-panel"></article>
+          </section>
+
+          <section class="dashboard-grid secondary-grid">
+            <article id="contentGlance" class="panel"></article>
+            <article id="outlinePanel" class="panel"></article>
+            <article id="preview" class="panel preview-panel"></article>
+          </section>
+
+          <section class="dashboard-grid issue-grid">
+            <article id="issuesPanel" class="panel issues-panel"></article>
+            <article id="ai-analysis" class="panel ai-panel"></article>
+          </section>
+
+          <section class="dashboard-grid bottom-grid">
+            <article id="competitors" class="panel"></article>
+            <article id="distributionPanel" class="panel"></article>
+            <article id="publishing-risk" class="panel"></article>
+          </section>
+
+          <section id="readability" class="panel diagnostics-panel"></section>
+          <section id="sources" class="panel evidence-panel"></section>
+          <section id="seo" class="panel hidden-anchor"></section>
+          <section id="eeat" class="panel hidden-anchor"></section>
+
+          <footer class="audit-footer">
+            <span id="auditRuntime">Audit completed locally</span>
+            <button id="feedbackButton" class="text-button" type="button">Suggest a feature</button>
+          </footer>
         </section>
-      </section>
-    </main>
+      </main>
+    </div>
+
     <script src="app.js"></script>
   </body>
 </html>
